@@ -1,8 +1,8 @@
 # Thành Thạo Docker Từ Cơ Bản Đến Nâng Cao
 
-- [Section 02](#section-02)
-- [Section 03](#section-03)
--
+- [Section 02 - Tổng quan về Docker](#section-02)
+- [Section 03 - Cài đặt Docker và môi trường](#section-03)
+- [Section 04 - Kiến trúc Docker](#section-04)
 
 ## Section 02
 
@@ -40,9 +40,6 @@
         - Versioning: Support việc version các image, dễ dàng update và rollback.
 
 - VMs and Docker Containers
-
-    <details>
-    <summary></summary>
 
     <p align="center">
         <img src="note_imgs/vms_con.jpg" width="500" />

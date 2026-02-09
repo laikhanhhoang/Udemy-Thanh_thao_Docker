@@ -3,6 +3,7 @@
 - [Section 02 - Tổng quan về Docker](#section-02)
 - [Section 03 - Cài đặt Docker và môi trường](#section-03)
 - [Section 04 - Kiến trúc Docker](#section-04)
+- [Section 05 - Docker Commands và Containers](#section-05)
 
 ## Section 02
 
@@ -111,6 +112,29 @@
         - Gửi trả thông tin về CLI.
 
     - Docker Registry: Nơi lưu trữ và chia sẻ Docker Images, cho phép push sau khi build và pull về để chạy container.
+
+## Section 05
+
+<p align="center">
+    Docker Commands và Containers
+</p>
+
+- Docker Container:
+    - Docker Image là bản đóng gói bất biến gồm:
+        - Code ứng dụng
+        - Thư viện / dependencies
+        - Runtime (Python, Node, Java…)
+        - Cấu hình hệ thống cần thiết (OS layer, env, v.v.)
+
+    - Docker Container là instance đang chạy của image.
+    - Từ một image, có thể tạo nhiều container.
+    - Để chạy một container từ container:
+    
+        ```
+        docker run <image_name>
+        docker run --name <container_name> <image_name>
+        ```
+    
 
         
 

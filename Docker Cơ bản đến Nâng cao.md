@@ -12,9 +12,6 @@
 
 - Docker là một nền tảng mã nguồn mở dùng để phát triển, đóng gói, và chạy các ứng dụng trong những môi trường cách ly gọi là container.
 
-    <details>
-    <summary></summary>
-
     Key concepts:
     - Containerization: Một hình thức ảo hóa nhẹ, dùng để đóng gói ứng dụng cùng với các thư viện/phụ thuộc của nó.
     - Docker Engine: Môi trường chạy (runtime) cho phép bạn build và run các container.
@@ -32,9 +29,6 @@
         ```
 
 - Why Docker?
-
-    <details>
-    <summary></summary>
 
     - Giải quyết vấn đề chạy được trên máy mình, mà không chạy được trên máy đồng nghiệp.
     - Benefits of Docker:
@@ -82,9 +76,6 @@
 
 - Các khái niệm chính
 
-    <details>
-    <summary></summary>
-
     - Docker Engine: runtime core giúp build, run và quản lý containers.
         <p align="center">
             Docker Engine = Docker Daemon + Docker CLI + API
@@ -104,9 +95,6 @@
 
 - Kiến trúc Docker
 
-    <details>
-    <summary></summary>
-    
     <p align="center">
         <img src="note_imgs/docker_arch.png" width="400" />
     </p>

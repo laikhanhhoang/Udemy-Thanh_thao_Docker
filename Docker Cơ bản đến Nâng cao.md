@@ -1,9 +1,14 @@
 # Thành Thạo Docker Từ Cơ Bản Đến Nâng Cao
 
-- [Section 01](#section-01)
 - [Section 02](#section-02)
+- [Section 03](#section-03)
+-
 
-## Section 01
+## Section 02
+
+<p align="center">
+    Tổng quan về Docker
+</p>
 
 - Docker là một nền tảng mã nguồn mở dùng để phát triển, đóng gói, và chạy các ứng dụng trong những môi trường cách ly gọi là container.
 
@@ -63,5 +68,66 @@
     VMs có môi trường độc lập nên khó bị tấn công hơn. Trong khi đó Containers dựa trên Host OS do đó nếu Host OS bị tấn công, các containers vẫn có thể gặp nhiều rủi ro.
 
 
-## Section 02
+## Section 03
+
+<p align="center">
+    Cài đặt Docker và môi trường 
+</p>
+
+## Section 04
+
+<p align="center">
+    Kiến trúc Docker
+</p>
+
+- Các khái niệm chính
+
+    <details>
+    <summary></summary>
+
+    - Docker Engine: runtime core giúp build, run và quản lý containers.
+        <p align="center">
+            Docker Engine = Docker Daemon + Docker CLI + API
+        </p>
+
+        - Docker CLI: Giao diện command-line (thường là terminal) để giao tiếp với Docker.
+        - Docker CLI và Docker Daemon giao tiếp thông qua API.
+        - Docker Daemon (dockered): Background service dùng để quản lý Docker containers, images, networks và volumes.
+        - Docker Images: Read-only Templates gồm chồng (stack) các    
+        filesystem layer bất biến (immutable) dùng để tạo container.
+        - Docker Containers: Các instance của images - nhẹ và có thể chạy được.
+        - Dockerfile: Một file text hướng dẫn build một Docker Image.
+        - Docker Hub/ Docker Registry: Một kho lưu và chia sẻ Docker Images.
+        - Docker Compose: Một tool dùng để định nghĩa và chạy ứng dụng nhiều containers sử dụng một file YAML.
+        - Docker Volumes: Phương pháp lưu trữ lâu dài cho các containers.
+        - Docker Networks: Quản lí giao tiếp giữa các containers và với thế giới bên ngoài.
+
+- Kiến trúc Docker
+
+    <details>
+    <summary></summary>
+    
+    <p align="center">
+        <img src="note_imgs/docker_arch.png" width="400" />
+    </p>
+
+    - Docker CLI:
+        - Thường sẽ làm việc qua CLI (comman line interface)
+        - User nhập lệnh qua CLI
+        - Lệnh được chuyển thành request gửi đến Docker Daemon và đợi phản hồi.
+
+    - Docker host: là máy (vật lý hoặc ảo) mà Docker Daemon đang chạy trên đó.
+
+        Ví dụ: Chạy lệnh "docker run ..."
+        - Nhận yêu cầu từ CLI.
+        - Kiểm tra xem image có sẵn chưa.
+        - Nếu chưa có thì pull từ Registry về rồi khởi tạo container.
+        - Nếu có rồi thì khởi tạo Container luôn.
+        - Gửi trả thông tin về CLI.
+
+    - Docker Registry: Nơi lưu trữ và chia sẻ Docker Images, cho phép push sau khi build và pull về để chạy container.
+
+        
+
+
 

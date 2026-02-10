@@ -35,4 +35,20 @@
 </p>
 
 
-## Port mapping
+## Port mapping 
+
+- Chạy **`docker run -p 8080:80 nginx`**
+
+    <p align="center">
+    <img src="05_port_map_cons.png" width="550" />
+    </p>
+    
+    - nginx: là tên image, chạy một webserver mặc định trên cổng 80 bên trong container.
+    - -p 8080:80: ánh xạ cổng 8080 trên máy host với cổng 80 trên container.
+
+- Chạy **`http://localhost:8080`**
+
+    <p align="center">
+    <img src="05_nginx_web.png" width="400" />
+    </p>
+

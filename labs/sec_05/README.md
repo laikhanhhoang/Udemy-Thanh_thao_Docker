@@ -52,3 +52,18 @@
     <img src="05_nginx_web.png" width="400" />
     </p>
 
+## Chạy lệnh trong Docker Container
+
+<p align="center">
+  <img src="05_exec_con.jpg" width="550" />
+</p>
+
+<p align="center" style="margin-top: 6px; line-height: 1.6;">
+    <em>
+        Sử dụng <strong><code>docker exec -it <container_id_or_name> <command></code></strong> để chạy lệnh bất kì trong containers.
+    </em>
+</p>
+
+**Lưu ý:** **`docker run -d -it my_con ubuntu bash`** phải có **`-it`** vì bạn đã override bash là lệnh CMD mặc định trong container, do đó nó cần TTY từ **`-it`** để container không bị hủy.
+
+

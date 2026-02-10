@@ -82,8 +82,7 @@
         - Docker CLI: Giao diện command-line (thường là terminal) để giao tiếp với Docker.
         - Docker CLI và Docker Daemon giao tiếp thông qua API.
         - Docker Daemon (dockered): Background service dùng để quản lý Docker containers, images, networks và volumes.
-        - Docker Images: Read-only Templates gồm chồng (stack) các    
-        filesystem layer bất biến (immutable) dùng để tạo container.
+        - Docker Images: Read-only Templates gồm chồng (stack) các filesystem layer bất biến (immutable) dùng để tạo container.
         - Docker Containers: Các instance của images - nhẹ và có thể chạy được.
         - Dockerfile: Một file text hướng dẫn build một Docker Image.
         - Docker Hub/ Docker Registry: Một kho lưu và chia sẻ Docker Images.
@@ -94,7 +93,7 @@
 - Kiến trúc Docker
 
     <p align="center">
-        <img src="note_imgs/docker_arch.png" width="400" />
+        <img src="note_imgs/docker_arch.png" width="550" />
     </p>
 
     - Docker CLI:
@@ -120,6 +119,7 @@
 </p>
 
 - Docker Container:
+
     - Docker Image là bản đóng gói bất biến gồm:
         - Code ứng dụng
         - Thư viện / dependencies
@@ -134,7 +134,53 @@
         docker run <image_name>
         docker run --name <container_name> <image_name>
         ```
+
+        <details>
+        <summary> Demo Docker container - hello-world </summary>
+
+        - Chạy câu lệnh "demo run hello-world"
+
+        <p align="center">
+            <img src="note_imgs/docker_demo_hello_world.png" width="400" />
+        </p>
+
+        - Có thể thấy: Daemon không tìm thấy container trong Registry nên tìm kiếm trên Docker Hub.
+
+        
+        </details>
+
+        <details>
+        <summary> Demo Docker container - ubuntu </summary>
+
+        - Chạy câu lệnh "demo run -it ubuntu bash"
+            - **`-it`**: **`-i`**(interactive) cho phép gõ lệnh vào container và **`-t`** (tty) cho phép bạn thực hiện một số quyền khác (prompt đẹp, Ctrl+C, Clear screen và history,...)
+            - **`-bash`**: override CMD, chạy bash
+
+        <p align="center">
+            <img src="note_imgs/docker_run_ubuntu.png" width="400" />
+        </p>
+
+        - Có thể thấy: Ta có thể thực hiện trực tiếp các câu lệnh như terminal.
+        </details>
+
+- Docker Commands:
+
+    |Lệnh|Hành động|
+    |--------------|---------|
+    |docker ps|Liệt kê các docker đang chạy.|
+    |docker ps -a|Liệt kê tất cả các docker đã sử dụng.|
+    |docker rm <container_id_or_name>|Xóa một container đã không còn chạy nữa.|
+    |docker rm -f <container_id_or_name>|Xóa một container đang chạy (vì container vẫn running nên phải thêm option -f (force)).|
+    |docker stop <container_id_or_name>|Dừng container.|
+    |docker start <container_id_or_name>|Chạy container đã bị dừng, còn nếu container đang chạy thì sẽ không làm gì.|
+    |docker restart <container_id_or_name>|Khởi động container khi nó đã dừng, còn nếu container đang chạy thì sẽ dừng rồi restart container. <br> Thường dùng khi Docker gặp lỗi không nhận GPUs.|
+    |docker inspect <container_id_or_name>|Trả về một file JSON lớn chứa metadata về container.|
+    |docker run -d <image_name>|Chạy container ở background|
+    |docker run -it <image_name> /bin/bash <br> (hoặc bash)|Chạy container và thao tác với nó <br> **`-it`** là kết hợp của -i (interactive) và -t (psuedu-TTY), cho phép tương tác với container thông qua terminal, <br> thiếu một trong hai cái thì output sẽ không được định dạng hoặc chúng ta không tương tác được.|
+    |docker run -p <host_port>:<container_port> <image_name>|Map cổng của container tới cổng của máy host.|
     
+
+    Labs: [Link](labs/sec_05/)
 
         
 

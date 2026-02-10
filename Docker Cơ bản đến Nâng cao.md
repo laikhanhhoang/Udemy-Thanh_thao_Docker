@@ -4,6 +4,7 @@
 - [Section 03 - Cài đặt Docker và môi trường](#section-03)
 - [Section 04 - Kiến trúc Docker](#section-04)
 - [Section 05 - Docker Containers và Commands liên quan](#section-05)
+- [Section 06 - Docker Image](#section-06)
 
 ## Section 02
 
@@ -229,3 +230,30 @@
 <p align="center">
     <img src="note_imgs/05_recap_con.png" width="600" />
 </p>
+
+
+## Section 06
+<p align="center">
+    Docker Image
+</p>
+
+- Docker image: là một đơn vị nhỏ gọn, độc lập và có thể chạy được, chứa đầy đủ mọi thành phần cần thiết để thực thi một ứng dụng — bao gồm mã nguồn, môi trường runtime, các công cụ cần thiết, thư viện, và các thiết lập cấu hình. Docker image đóng vai trò là nền tảng để tạo ra container.
+
+    |||
+    |--|--|
+    |Layers (Các lớp)|         Một image được xây dựng từ nhiều lớp, mỗi lớp đại diện cho một tập các thay đổi trên hệ thống file.|
+    |Base Image (Image nền)|   Điểm khởi đầu của một image, thường là phiên bản tối giản của một hệ điều hành.|
+    |Parent Image (Image cha)| Image mà một image khác được kế thừa hoặc xây dựng dựa trên.|
+    |Image Tags (Thẻ image)|   Các nhãn mô tả giúp định phiên bản và nhận diện image.|
+    |Image ID|                 Một chuỗi hash duy nhất dùng để phân biệt image này với image khác.|
+
+<br>
+
+- Commands với Docker Image:
+
+    |||
+    |--|--|
+    |Lệnh|Công dụng|
+    |**`docker pull <image_name>:<tag>`**|Tải image về từ [Docker Hub](https://hub.docker.com/).|
+    |**`docker images`**|Liệt kê các docker images đang có trong máy. <br> **`docker images ls`** là cách viết tương tự nhưng chính quy, rõ nghĩa, tuân theo cú pháp phân cấp của Docker CLI: **`docker <object> <command>`**.|
+    |**`docker rmi <image_name>:<tag>`** <br> **`docker rmi <image_id>`**|Xóa docker image đang có trong máy. <br> **Tuy nhiên** nếu Docker Image đang gắn với một container nào đó thì hệ thống sẽ cảnh báo, vì Container tham chiếu tới image. <br> **`docker image rm <image_name>:<tag>`** là cách viết tương tự nhưng chính quy, rõ nghĩa, tuân theo cú pháp phân cấp của Docker CLI: **`docker <object> <command>`**.|

@@ -257,3 +257,8 @@
     |**`docker pull <image_name>:<tag>`**|Tải image về từ [Docker Hub](https://hub.docker.com/).|
     |**`docker images`**|Liệt kê các docker images đang có trong máy. <br> **`docker images ls`** là cách viết tương tự nhưng chính quy, rõ nghĩa, tuân theo cú pháp phân cấp của Docker CLI: **`docker <object> <command>`**.|
     |**`docker rmi <image_name>:<tag>`** <br> **`docker rmi <image_id>`**|Xóa docker image đang có trong máy. <br> **Tuy nhiên** nếu Docker Image đang gắn với một container nào đó thì hệ thống sẽ cảnh báo, vì Container tham chiếu tới image. <br> **`docker image rm <image_name>:<tag>`** là cách viết tương tự nhưng chính quy, rõ nghĩa, tuân theo cú pháp phân cấp của Docker CLI: **`docker <object> <command>`**.|
+    |**`docker inspect <image_name>:<tag>`**|Hiển thị thông tin chi tiết dạng JSON về một Docker Image, bao gồm cấu hình, môi trường,...|
+    |**`docker tag <source_image>:<tag> <target_images>:<tag>`**|Đổi tên một image đang tồn tại.|
+    |**`docker image prune`**|Xóa các dangling images, thường không có tag **`<none>:<none>`**. <br> Thêm **`-a`** vào đằng sau để xóa tất cả image không được container nào sử dụng.|
+    |**`docker system prune`**|Dọn dẹp toàn bộ tài nguyên không cần thiết trong Docker: các container đã dừng, các network không sử dụng, images không còn liên kết và các volume không sử dụng.|
+

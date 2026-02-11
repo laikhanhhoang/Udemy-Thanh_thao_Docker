@@ -5,6 +5,74 @@
 - [Section 04 - Kiến trúc Docker](#section-04)
 - [Section 05 - Docker Containers và Commands liên quan](#section-05)
 - [Section 06 - Docker Image](#section-06)
+- [Section 07 - Dockerfile & Build Docker Image](#section-07)
+
+
+
+## Fundamental
+
+<details>
+<summary><strong>IP và Port trong mô hình Server – Docker – Application</strong></summary>
+    <ul>
+        <li>
+            Mỗi server có một định danh duy nhất trên Internet gọi là <strong>IP</strong>.
+            <strong>Port</strong> là cổng giao tiếp logic trên server, dùng để xác định
+            <em>dịch vụ nào</em> sẽ nhận request (ví dụ: web server, database, API).
+        </li>
+        <li>
+            <strong>Port của server (host port)</strong> và
+            <strong>port của container (container port)</strong> là <strong>hai khái niệm khác nhau</strong>.
+            Docker sử dụng cơ chế port mapping để chuyển request từ port của server
+            vào đúng port mà ứng dụng đang lắng nghe bên trong container.
+        </li>
+        <li>
+            Ứng dụng (ví dụ: FastAPI / Django chạy bằng Uvicorn hoặc Gunicorn)
+            <strong>chỉ lắng nghe port bên trong container</strong> và không biết gì
+            về IP hay port bên ngoài của server.
+        </li>
+    </ul>
+    <p><strong>Ví dụ 1: Chạy FastAPI trong Docker</strong></p>
+    <ul>
+        <li>
+            Uvicorn chạy bên trong container và lắng nghe tại
+            <code>0.0.0.0:8000</code>.
+        </li>
+        <li>
+            Docker được cấu hình port mapping:
+            <code>-p 8080:8000</code>.
+        </li>
+        <li>
+            Người dùng gọi API bằng đường dẫn:
+            <code>http://&lt;server_ip&gt;:8080</code>.
+        </li>
+        <li>
+            Docker chuyển request từ
+            <code>server:8080</code> vào
+            <code>container:8000</code>, nơi Uvicorn xử lý request.
+        </li>
+    </ul>
+    <p><strong>Ví dụ 2: Chạy nhiều container cùng một ứng dụng</strong></p>
+    <ul>
+        <li>
+            Hai container đều chạy ứng dụng lắng nghe tại port
+            <code>8000</code> bên trong container.
+        </li>
+        <li>
+            Docker map ra các port khác nhau trên server:
+            <code>-p 8001:8000</code> và <code>-p 8002:8000</code>.
+        </li>
+        <li>
+            Người dùng truy cập:
+            <code>http://&lt;server_ip&gt;:8001</code> hoặc
+            <code>http://&lt;server_ip&gt;:8002</code>.
+        </li>
+        <li>
+            Mỗi request được chuyển vào đúng container tương ứng,
+            dù ứng dụng trong container đều dùng cùng một port.
+        </li>
+    </ul>
+</details>
+
 
 ## Section 02
 
@@ -254,11 +322,111 @@
     |||
     |--|--|
     |Lệnh|Công dụng|
-    |**`docker pull <image_name>:<tag>`**|Tải image về từ [Docker Hub](https://hub.docker.com/).|
-    |**`docker images`**|Liệt kê các docker images đang có trong máy. <br> **`docker images ls`** là cách viết tương tự nhưng chính quy, rõ nghĩa, tuân theo cú pháp phân cấp của Docker CLI: **`docker <object> <command>`**.|
-    |**`docker rmi <image_name>:<tag>`** <br> **`docker rmi <image_id>`**|Xóa docker image đang có trong máy. <br> **Tuy nhiên** nếu Docker Image đang gắn với một container nào đó thì hệ thống sẽ cảnh báo, vì Container tham chiếu tới image. <br> **`docker image rm <image_name>:<tag>`** là cách viết tương tự nhưng chính quy, rõ nghĩa, tuân theo cú pháp phân cấp của Docker CLI: **`docker <object> <command>`**.|
-    |**`docker inspect <image_name>:<tag>`**|Hiển thị thông tin chi tiết dạng JSON về một Docker Image, bao gồm cấu hình, môi trường,...|
-    |**`docker tag <source_image>:<tag> <target_images>:<tag>`**|Đổi tên một image đang tồn tại.|
-    |**`docker image prune`**|Xóa các dangling images, thường không có tag **`<none>:<none>`**. <br> Thêm **`-a`** vào đằng sau để xóa tất cả image không được container nào sử dụng.|
-    |**`docker system prune`**|Dọn dẹp toàn bộ tài nguyên không cần thiết trong Docker: các container đã dừng, các network không sử dụng, images không còn liên kết và các volume không sử dụng.|
+    |**`docker pull <image_name>:<tag>`**|**Tải** image về từ [Docker Hub](https://hub.docker.com/).|
+    |**`docker images`**|**Liệt kê** các docker images đang có trong máy. <br>  Cách viết tương tự nhưng chính quy, rõ nghĩa, tuân theo cú pháp phân cấp của Docker CLI **`docker <object> <command>`** là: **`docker images ls`**.|
+    |**`docker inspect <image_name>:<tag>`**|**Hiển thị** thông tin chi tiết dạng JSON về một Docker Image, bao gồm cấu hình, môi trường,...|
+    |**`docker tag <source_image>:<tag> <target_images>:<tag>`**|**Đổi tên** một image đang tồn tại.|
+    |**`docker rmi <image_name>:<tag>`** <br> **`docker rmi <image_id>`**|**Xóa** docker image đang có trong máy. <br> **Tuy nhiên** nếu Docker Image đang gắn với một container nào đó thì hệ thống sẽ cảnh báo, vì Container tham chiếu tới image. Cách viết tương tự nhưng chính quy, rõ nghĩa, tuân theo cú pháp phân cấp của Docker CLI **`docker <object> <command>`** là: **`docker image rm <image_name>:<tag>`**.|
+    |**`docker image prune`**|**Xóa** các dangling images, thường không có tag **`<none>:<none>`**. <br> Thêm **`-a`** vào đằng sau để xóa tất cả image không được container nào sử dụng.|
+    |**`docker system prune`**|**Dọn dẹp** toàn bộ tài nguyên không cần thiết trong Docker: các container đã dừng, các network không sử dụng, images không còn liên kết và các volume không sử dụng.|
+
+## Section 07
+
+- Dockerfile là một file văn bản chứa các lệnh để tự động hóa quá trình tạo Docker Image. Nó định nghĩa môi trường, dependencies và cách chúng ta chạy ứng dụng.
+
+    - Cấu trúc cơ bản:
+        - Mỗi dòng trong Dockerfile là một instruction.
+        - Mỗi instruction tạo ra một layer trong image.
+        - Dockerfile thường bắt đầu bằng FROM để chỉ định base image.
+
+- Docker instructions là các lệnh được viết trong Dockerfile để hướng dẫn Docker cách xây dựng một image. Mỗi instruction là một từ khóa viết in hoa và thường đi kèm tham số.
+    - Mỗi instruction tương ứng với một bước tạo ra image.
+
+        Ví dụ:
+
+        ```dockerfile
+        FROM python:3.9-slim
+        WORKDIR /app
+        COPY requirements.txt
+        RUN pip install -r requirement.txt
+        COPY . .
+        EXPOSE 8000
+        CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+        ```
+
+    - Một số Docker instructions khác:
+        - **`LABEL`**: để gắn metadata (siêu dữ liệu) cho image (dưới dạng cặp key-value)
+            - Thêm thông tin mô tả về image như version, ai tạo ra, mục đích ...
+            - Giúp việc tìm kiếm sau này dễ hơn
+        - **`ARG`**: khai báo biến:
+            - Định nghĩa biến chỉ dùng trong quá trình docker build
+            - Cho phép truyền giá trị vào khi build bằng --build-arg
+            - Sau khi build xong, container không thể truy cập biến ARG
+        - **`ENV`**:
+            - Khai báo biến môi trường trong image.
+            - Biến này tồn tại cả trong quá trình build lẫn khi container chạy
+            - Biến môi trường được khai báo bằng ENV có thể bị ghi đè khi chạy container bằng cách sử dụng cờ -e hoặc --env trong lệnh docker run.
+            - Có thể kiểm tra bằng docker inspect container_name_or_id
+        - So sánh:
+            | Tiêu chí                 | `ARG`                                 | `ENV`                                     | `LABEL`                           |
+            | ------------------------ | ------------------------------------- | ----------------------------------------- | --------------------------------- |
+            | Mục đích                 | Tham số cho **quá trình build image** | Biến môi trường cho **ứng dụng khi chạy** | **Metadata** mô tả image          |
+            | Thời điểm tồn tại        | **Build time**                        | **Runtime**                               | Build & runtime                   |
+            | Có vào container không   | ❌                                     | ✅                                         | ❌                                 |
+            | App bên trong đọc được   | ❌                                     | ✅                                         | ❌                                 |
+            | Override khi nào         | `docker build --build-arg`            | `docker run -e`, Docker Compose, K8s      | Chỉ khi build                     |
+            | Ảnh hưởng đến image hash | ✅                                     | ✅                                         | ✅                                 |
+            | Dùng cho config app      | ❌                                     | ✅                                         | ❌                                 |
+            | Dùng cho version / info  | ⚠️ (ít dùng)                          | ⚠️                                        | ✅                                 |
+            | Ví dụ điển hình          | Base image version                    | `APP_ENV`, `DB_HOST`                      | `version`, `maintainer`, `source` |
+        - **`COPY`**:
+            - Chỉ sao chép file/ thư mục, không xử lý .tar, không tải file từ URL.
+            - Đơn giản, rõ ràng nnê được ưu tiên sử dụng.
+        - **`ADD`**: Ngoài việc sao chép file từ COPY, còn:
+            - Tự động giải nén nếu source là .tar, .tar.gz,...
+            - Hỗ trợ URL - tải file từ Internet.
+        - **`CMD`** và **`ENTRYPOINT`** đều được dùng để chỉ định lệnh mặc định sẽ chạy khi container được khởi động.
+            - **`CMD`** - Lệnh mặc định có thể bị ghi đè nếu truyền lệnh mới khi **`docker run`**.
+            - **`ENTRYPOINT`** Lệnh cố định khó bị ghi đè. Nếu truyền đối số khi chạy container, nó sẽ gán vào sau lệnh **`ENTRYPOINT`**.
+        - **`EXPOSE`** được dùng để khai báo port mà container sử dụng để giao tiếp bên ngoài. Chỉ dùng để tài liệu hóa, không có tác dụng mở cổng thực sự. Phải dùng **port mapping** khi chạy container.
+
+- Build Docker Image:
+    - Lệnh hay dùng: **`docker build -t <image_name>:<image_tag> .`**
+        - **`.`**: là thư mục hiện tại đang đứng khi chạy lệnh trên, còn gọi là build context. 
+        - Mặc định sẽ tìm Dockerfile trong build context.
+    - Bản đầy đủ: **`docker build -f <path_to_Dockerfile> -t <image_name>:<image_tag> <build_context_path>`**
+        
+        Ví dụ:
+        - Cấu trúc project:
+
+            ```
+            my-project/
+            ├─ docker/
+            │  └─ Dockerfile
+            ├─ src/
+            │  ├─ app.py
+            │  └─ requirements.txt
+            └─ .github/
+            ```
+        
+        - Nội dung Dockerfile:
+
+            ```dockerfile
+            FROM python:3.11-slim
+
+            WORKDIR /app
+
+            COPY src/requirements.txt .
+            RUN pip install --no-cache-dir -r requirements.txt
+
+            COPY src/ .
+
+            CMD ["python", "app.py"]
+            ```
+
+        - Lệnh build:
+
+            ```bash
+            docker build -f docker/Dockerfile -t myapp:1.0.0 .
+            ```
 

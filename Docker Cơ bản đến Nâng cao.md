@@ -430,3 +430,11 @@
             docker build -f docker/Dockerfile -t myapp:1.0.0 .
             ```
 
+- Tối ưu build Docker Image:
+    - Khi Docker build Image, nó xây dựng theo kiểu layered architecture. Mỗi dòng trong Instruction tạo thành một layer mới trong Docker Image chỉ với sự thay đổi so với layer trước đó.
+    - Docker sử dụng layered architecture này để tái sử dụng cache và giảm dung lượng.
+    - Khi build lại image, Docker sẽ dùng lại layer cũ nếu nội dung không đổi, giúp build nhanh hơn.
+    - Mẹo tối ưu Dockerfile:
+        - Sắp xếp các instruction ít thay đổi lên trước, để tận dụng cache.
+        - Gộp nhiều **`RUN`** lại bằng **`&&`** để giảm số layer.
+         

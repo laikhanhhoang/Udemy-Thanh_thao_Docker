@@ -57,3 +57,20 @@
 
     - Nhận xét: Có thể thấy khi override ENTRYPOINT thì nó sẽ được thêm vào đằng sau, do đó ENTRYPOINT SẼ TRỞ THÀNH
     **`["echo", "Hello world from ENTRYPOINT", "echo", "Hello world - override"]`** và cho ra kết quả **"Hello world from ENTRYPOINT echo Hello world - override"**.
+
+# 04 - Tối ưu build Docker image dựa trên layered architecture
+- Chạy lệnh:
+
+    ```bash
+    docker build -t layer_demo:v1 . # Tốn 20.4s
+    docker run layer_demo:v1   
+
+    # Thay đổi lệnh RUN echo
+    docker build -t layer_demo:v2 . # Tốn 2.7s
+    docker run layer_demo:v2 
+    ```
+
+- Kết quả:
+        <p align="center">
+            <img src="lab_04/07_04_docker_layer.png" width="500" />
+        </p>

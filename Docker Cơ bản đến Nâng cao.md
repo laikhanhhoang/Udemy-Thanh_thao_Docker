@@ -6,6 +6,7 @@
 - [Section 05 - Docker Containers và Commands liên quan](#section-05)
 - [Section 06 - Docker Image](#section-06)
 - [Section 07 - Dockerfile & Build Docker Image](#section-07)
+- [Section 08 - Docker Storage & Mounting](#section-08)
 
 
 
@@ -331,6 +332,9 @@
     |**`docker system prune`**|**Dọn dẹp** toàn bộ tài nguyên không cần thiết trong Docker: các container đã dừng, các network không sử dụng, images không còn liên kết và các volume không sử dụng.|
 
 ## Section 07
+<p align="center">
+    Dockerfile
+</p>
 
 - Dockerfile là một file văn bản chứa các lệnh để tự động hóa quá trình tạo Docker Image. Nó định nghĩa môi trường, dependencies và cách chúng ta chạy ứng dụng.
 
@@ -438,3 +442,37 @@
         - Sắp xếp các instruction ít thay đổi lên trước, để tận dụng cache.
         - Gộp nhiều **`RUN`** lại bằng **`&&`** để giảm số layer.
          
+
+## Section 08
+
+<p align="center">
+    Docker Storage & Mounting
+</p>
+
+- Docker container gồm:
+    - Image Layers (Read-only):
+        - Không thể modify trực tiếp.
+        - Được share giữa nhiều contaniers.
+        - Cached để tái sử dụng.
+
+    - Container Layers (Read-write):
+        - Khi tạo container, Docker tạo container layer.
+        - Lưu trữ dữ liệu được tạo bởi container (logs, tempfile,...)
+        - Tuy nhiên khi container bị xóa, container layer cũng sẽ mất.
+
+    - Lưu ý: Giả sử như khi ta **build lại Image cho Postgreql**, nếu không có chỗ lưu lại dữ liệu production, **khi xóa Docker cũ, dữ liệu sẽ mất hết**. Do đó ta cần lưu dữ liệu ở chỗ khác.
+
+- Mounting:
+    - Bind Mount:
+        - Mount trực tiếp trên thư mục host vào container.
+        - Đường dẫn tuyệt đối trên host.
+    - Volume Mount:
+        - Docker quản lý storage.
+        - Lưu trong **`/var/lib/docker/volumes/<volume_name>/_data`**.
+
+    - Lệnh:
+        ```bash
+        docker run -d --name <container_name> -v <host_path_or_volume_name>:<container_path>:<options> <image_name>
+        ```
+
+        Nghĩa là nếu dữ liệu mới được thêm vào **`<container_path>`** thì sẽ được chuyển sang **`<host_path>`** (bind mount) hoặc **`/var/lib/docker/volumes/<volume_name>/_data`** (volume mount) trên máy **host**.

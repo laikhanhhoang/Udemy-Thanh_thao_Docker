@@ -7,7 +7,7 @@
 - [Section 06 - Docker Image](#section-06)
 - [Section 07 - Dockerfile & Build Docker Image](#section-07)
 - [Section 08 - Docker Storage & Mounting](#section-08)
-
+- [Section 09 - Docker Network](#section-09)
 
 
 ## Fundamental
@@ -515,3 +515,19 @@
     - Nhược điểm:
         - Containers chỉ giao tiếp qua IP, không qua tên.
         - Khó quản lý khi có nhiều containers.
+
+- CUSTOM BRIDGE NETWORK
+    - Tại sao cần ?
+        - Containers có thể giao tiếp chỉ qua tên container -> Dễ dàng hơn.
+        - Tách biệt networks cho các applications.
+        - Kiểm soát tốt hơn về security và routing.
+    - Lệnh:
+
+        ```bash
+        docker network create --driver bridge my-network
+        ```
+
+- NULL NETWORK:
+    - Container hoàn toàn isolated, không có network access.
+    - Không giao tiếp với bất kì container nào, kể cả host.
+    - Dùng trong sandbox, kiểm thử bảo mật.

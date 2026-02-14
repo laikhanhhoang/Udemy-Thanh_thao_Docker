@@ -1,4 +1,4 @@
-## 01
+## 01 - Host Network
 
 ```bash
 CHỈ CHẠY ĐƯỢC TRÊN UBUNTU
@@ -15,7 +15,7 @@ docker docker run --name con3 --network host myapp:v1 uvicorn main:app --host 0.
 # Chạy ổn
 ```
 
-## 02
+## 02 - Default Bridge Network
 
 ```bash
 BASH 1

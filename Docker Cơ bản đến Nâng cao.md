@@ -8,7 +8,7 @@
 - [Section 07 - Dockerfile & Build Docker Image](#section-07)
 - [Section 08 - Docker Storage & Mounting](#section-08)
 - [Section 09 - Docker Network](#section-09)
-
+- [Section 10 - Docker Compose](#section-10)
 
 ## Fundamental
 
@@ -70,6 +70,18 @@
         <li>
             Mỗi request được chuyển vào đúng container tương ứng,
             dù ứng dụng trong container đều dùng cùng một port.
+        </li>
+    </ul>
+</details>
+
+<details>
+<summary><strong>Port</strong></summary>
+    <ul>
+        <li>
+        Port là cổng logic trên một máy tính, dùng để phân biệt các service/chương trình cùng dùng 1 IP. Mỗi service “nghe” trên một port riêng, ví dụ Postgres mặc định là 5432. Khi bạn connect client (PgAdmin, psql, browser), IP + port định danh đúng service cần giao tiếp. Một port trên cùng host chỉ có thể có một process nghe; nếu có 2 server cùng port trên host → lỗi.
+        </li>
+        <li>
+        Trong Docker, mỗi container có container port riêng (Postgres luôn 5432), host port chỉ là “cửa ra vào” để connect từ host. Bạn có thể map host port khác nhau cho nhiều container cùng port nội bộ (5432:5432, 5433:5432). Docker network cho phép container kết nối bằng service name mà không cần host port. PgAdmin connect đến host port → Docker NAT/forward → container port → server xử lý.
         </li>
     </ul>
 </details>
@@ -531,3 +543,51 @@
     - Container hoàn toàn isolated, không có network access.
     - Không giao tiếp với bất kì container nào, kể cả host.
     - Dùng trong sandbox, kiểm thử bảo mật.
+
+## Section 10
+
+<p align="center">
+    Docker Compose
+</p>
+
+- Docker Compose là công cụ giúp định nghĩa và chạy nhiều container với cấu hình trong một file YAML duy nhất.
+    - Giúp dễ dàng quản lý các dịch vụ có phụ thuộc lẫn nhau (ví dụ: Web + Database).
+    - Thay vì chạy từng **`docker run`**, ta chạy **`docker compose up`**.
+
+- Commands:
+    |||
+    |--|--|
+    |docker compose up|**Chạy** các container và hiển thị log ngay trên terminal|
+    |docker compose up -d| **Chạy** container **ở chế độ nền** (detached mode) – terminal không bị chiếm|
+    |docker compose up --build|**Chạy** container **nhưng ép build lại images** trước khi chạy|
+    |docker compose ps| **Xem trạng thái** các container **đang chạy** từ Compose.|
+    |docker compose stop| **Tạm dừng** các container, **không xóa** gì cả.|
+    |docker compose down|**Dừng và xóa containers, network** do Docker Compose tạo ra (còn các options khác)|
+    |docker compose restart| **Khởi động** lại **tất cả** container.|
+
+- YAML File
+    - Là một định dạng serialization dữ liệu được thiết kế dễ đọc và dễ viết.
+    - Có đuôi là **.yaml** hoặc **.yml**, thường được dùng cho config file, Docker Compose, Kubernetes hoặc Github Actions.
+    - Có thể thêm ghi chú bằng *`#`*; hỗ tợ string, number, array, object, null.
+    - Quy tắc quan trọng:
+        - Chỉ sử dụng Space, không dùng Tab.
+        - Thường dùng 2 hoặc 4 spaces cho mỗi cấp, nhưng phải nhất quán.
+        - Map/Object (key: value) và Sequence/Array (danh sách) là những thành phần cốt lõi của YAML file.
+        - Ví dụ:
+
+            ```yaml
+            version: "3.9"
+            services: 
+                web:
+                    image: nginx
+            ```
+
+            ```yaml
+            - apple
+            - banana
+            - mango
+            ```
+- Khi Docker Compose, nó sẽ tạo một Bridge Custom Network để các services giao tiếp với nhau.
+
+
+    

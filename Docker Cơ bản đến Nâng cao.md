@@ -476,3 +476,42 @@
         ```
 
         Nghĩa là nếu dữ liệu mới được thêm vào **`<container_path>`** thì sẽ được chuyển sang **`<host_path>`** (bind mount) hoặc **`/var/lib/docker/volumes/<volume_name>/_data`** (volume mount) trên máy **host**.
+
+## Section 09
+
+<p align="center">
+    Docker Network
+</p>
+
+- Docker Network tạo ra một hệ thống mạng ảo để:
+    - Containers giao tiếp với nhau và với Internet.
+    - Host truy cập vào Container.
+    - Cô lập traffic giữa các applications.
+    - Docker cung cấp nhiều Driver mạng tùy nhu cầu sử dụng.
+
+- Khi cài đặt Docker, sẽ mặc định tạo ra 3 loại network:
+    - Bridge
+    - Host
+    - Null
+    - Ngoài ra còn 2 loại network khác:
+        - Overlay: dùng trong Docker Swarm, cho phép container trên nhiều máy khác nhau giao tiếp với nhau
+        - Macvian: Cho phép container có IP riêng trong mạng LAN như thể container là một máy thật. Phù hợp cho hệ tống yêu cầu địa chỉ IP tĩnh.
+
+- HOST NETWORK
+    - Tổng quan
+        - Container sử dụng trực tiếp network stack của host.
+        - Không có network isolation.
+        - Performance tốt nhất nhưng có thể xảy ra port conflict.
+    - Dùng khi:
+        - Cần performance cao.
+        - Network-intensive applications, monitoring tools.
+        - Dev/test nhanh.
+
+- BRIDGE NETWORK - DEFAULT BRIDGE NETWORK
+    - Là Bridge Network mặc định cho tất cả container.
+    - Tạo virtual bridge docker (như một switch) trên host.
+    - Containers có IP riêng trong subnet (thường 172.17.0.0/16).
+    - Container cùng bridge có thể giao tiếp với nhau.
+    - Nhược điểm:
+        - Containers chỉ giao tiếp qua IP, không qua tên.
+        - Khó quản lý khi có nhiều containers.
